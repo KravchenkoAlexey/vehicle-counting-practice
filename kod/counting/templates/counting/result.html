@@ -1,0 +1,50 @@
+{% extends "counting/base.html" %}
+{% block title %}Результат #{{ session.pk }}{% endblock %}
+{% block content %}
+<h2>Результат обработки #{{ session.pk }}</h2>
+<p class="text-muted">{{ session.video_name }} — {{ session.created_at }}</p>
+
+<div class="row mb-4">
+  <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ session.total_count }}</div><div class="stat-label">Пересечений</div></div></div>
+  <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ session.frames_processed }}</div><div class="stat-label">Кадров</div></div></div>
+  <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ session.fps_avg }}</div><div class="stat-label">FPS</div></div></div>
+  <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ session.duration_sec }} с</div><div class="stat-label">Время</div></div></div>
+</div>
+
+{% if session.by_class %}
+<div class="card mb-4">
+  <div class="card-header">По классам</div>
+  <ul class="list-group list-group-flush">
+    {% for name, cnt in session.by_class.items %}
+    <li class="list-group-item d-flex justify-content-between"><span>{{ name }}</span><strong>{{ cnt }}</strong></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% if snapshot_urls %}
+<div class="card mb-4">
+  <div class="card-header">Найденные транспортные средства</div>
+  <div class="card-body">
+    <p class="text-muted small mb-3">
+      Скриншоты с детекции: кадры с машинами и моменты пересечения линии подсчёта.
+    </p>
+    <div class="row g-3">
+      {% for url in snapshot_urls %}
+      <div class="col-md-4 col-lg-3">
+        <a href="{{ url }}" target="_blank" class="d-block border rounded overflow-hidden shadow-sm">
+          <img src="{{ url }}" alt="Детекция" class="img-fluid w-100" style="object-fit:cover; min-height:120px; background:#eee;">
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-warning">Скриншоты не сохранены. Обработайте видео заново — для старых сессий скрины недоступны.</div>
+{% endif %}
+
+<a href="{% url 'counting:report' session.pk %}" class="btn btn-success">Скачать Excel-отчёт</a>
+<a href="{% url 'counting:process' %}" class="btn btn-outline-primary">Новая обработка</a>
+<a href="{% url 'counting:history' %}" class="btn btn-outline-secondary">История</a>
+{% endblock %}

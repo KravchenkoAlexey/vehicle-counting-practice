@@ -1,0 +1,33 @@
+{% extends "counting/base.html" %}
+{% block title %}История{% endblock %}
+{% block content %}
+<h2>История обработки</h2>
+
+{% if sessions %}
+<a href="{% url 'counting:history_export' %}" class="btn btn-success mb-3">Экспорт в Excel</a>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th><th>Дата</th><th>Видео</th><th>Счёт</th><th>Кадров</th><th>FPS</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in sessions %}
+      <tr>
+        <td>{{ s.pk }}</td>
+        <td>{{ s.created_at|date:"d.m.Y H:i" }}</td>
+        <td>{{ s.video_name }}</td>
+        <td><strong>{{ s.total_count }}</strong></td>
+        <td>{{ s.frames_processed }}</td>
+        <td>{{ s.fps_avg }}</td>
+        <td><a href="{% url 'counting:result' s.pk %}" class="btn btn-sm btn-outline-primary">Открыть</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="alert alert-info">История пуста. <a href="{% url 'counting:process' %}">Обработайте видео</a>.</div>
+{% endif %}
+{% endblock %}

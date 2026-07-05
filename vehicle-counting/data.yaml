@@ -1,0 +1,13 @@
+path: C:\Users\777\Desktop\8 сем\Практика\archive (2)
+train: train/images
+val: valid/images
+test: test/images
+nc: 7
+names:
+- bicycle
+- bus
+- car
+- motorbike
+- rickshaw
+- truck
+- van

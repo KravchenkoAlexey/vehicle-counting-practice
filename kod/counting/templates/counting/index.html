@@ -1,0 +1,33 @@
+{% extends "counting/base.html" %}
+{% block title %}Главная — Vehicle Counting{% endblock %}
+{% block content %}
+<div class="row align-items-center">
+  <div class="col-lg-7">
+    <h1 class="mb-3">Подсчёт автомобилей на дорожном видео</h1>
+    <p class="lead">Детекция YOLOv8s, трекинг ByteTrack, подсчёт при пересечении виртуальной линии.</p>
+    <ul>
+      <li>Загрузка видео MP4 / AVI</li>
+      <li>Отображение bounding boxes, классов, счётчика</li>
+      <li>История сессий и Excel-отчёты</li>
+    </ul>
+    <a href="{% url 'counting:process' %}" class="btn btn-primary btn-lg">Обработать видео</a>
+  </div>
+  <div class="col-lg-5">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Конфигурация</h5>
+        <p><strong>Модель:</strong> YOLOv8s</p>
+        <p><strong>Классы подсчёта:</strong> {{ count_classes|join:", " }}</p>
+        <p><strong>Веса:</strong>
+          {% if model_exists %}
+            <span class="text-success">найдены</span>
+          {% else %}
+            <span class="text-danger">не найдены</span>
+          {% endif %}
+        </p>
+        <small class="text-muted">{{ model_path }}</small>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

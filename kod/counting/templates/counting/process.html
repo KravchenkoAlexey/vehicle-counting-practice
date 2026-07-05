@@ -1,0 +1,38 @@
+{% extends "counting/base.html" %}
+{% block title %}Обработка видео{% endblock %}
+{% block content %}
+<h2>Обработка видео</h2>
+<p class="text-muted">YOLOv8s + ByteTrack + линия подсчёта. Обработка может занять несколько минут.</p>
+
+{% if not model_exists %}
+<div class="alert alert-danger">Веса модели не найдены. Проверьте путь в <code>config.py</code>.</div>
+{% endif %}
+
+<div class="row">
+  <div class="col-lg-6">
+    <form method="post" enctype="multipart/form-data" class="card card-body shadow-sm">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3">
+          <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+          {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
+      {% endif %}
+      <button type="submit" class="btn btn-primary" {% if not model_exists %}disabled{% endif %}>
+        Запустить обработку
+      </button>
+    </form>
+  </div>
+  <div class="col-lg-6">
+    <div class="alert alert-info">
+      <strong>Подсказка:</strong> разместите линию подсчёта перпендикулярно движению транспорта.
+      Для теста можно ограничить число кадров (например, 300).
+    </div>
+  </div>
+</div>
+{% endblock %}
